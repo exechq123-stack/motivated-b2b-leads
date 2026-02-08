@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "hacker-news-lead-scraper",
+  "title": "Hacker News Lead Scraper for Founders",
+  "description": "Scrapes Hacker News to find startup founders and technical decision-makers discussing business problems. Uses official HN API - completely free and legal.",
+  "version": "1.0.0",
+  "meta": {
+    "templateId": "python-start"
+  },
+  "input": "./INPUT_SCHEMA.json",
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "categories": ["SCRAPER"]
+}
