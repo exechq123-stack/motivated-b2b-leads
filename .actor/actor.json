@@ -1,4 +1,3 @@
-.actor/actor.json
 {
   "actorSpecification": 1,
   "name": "hacker-news-lead-scraper",
@@ -13,4 +12,3 @@
   "readme": "./README.md",
   "categories": ["SCRAPER"]
 }
-Add Actor metadata  
