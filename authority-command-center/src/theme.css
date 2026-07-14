@@ -522,6 +522,67 @@ button { font-family: var(--font-body); cursor: pointer; }
 .days-saved b { color: var(--gold-deep); }
 
 /* ============================================================
+   Published / Post History
+   ============================================================ */
+.published { display: flex; flex-direction: column; gap: 16px; }
+
+.pub-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 22px 24px;
+}
+.pub-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.pub-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  background: rgba(11, 90, 63, 0.08);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 0 0 rgba(11, 90, 63, 0.5);
+  animation: pulse 2.4s infinite;
+}
+.pub-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-left: auto;
+}
+.li-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--emerald);
+  text-decoration: none;
+  margin-top: 4px;
+}
+.li-link:hover { color: var(--emerald-deep); text-decoration: underline; }
+
+/* ============================================================
    Toast
    ============================================================ */
 .toast-wrap {

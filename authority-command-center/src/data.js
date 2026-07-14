@@ -192,3 +192,53 @@ Got a question about it? Ask below. I read every one.`,
 // personal LinkedIn profile, and LinkedIn exposes no analytics API for personal
 // profiles — so a live, automated dashboard isn't possible. Rather than show
 // numbers that can't be kept real, the view was cut. The story ends at Publish.
+
+// ---- Published / Post History ----
+// The honest "proof it worked" view: posts the engine has already sent live.
+// Maps 1:1 onto Content Queue rows where Status = "Published" and Live Post URL
+// is filled — which the existing Make scenario writes back automatically. No
+// LinkedIn analytics needed; these are the receipts, not vanity metrics.
+export const SEED_PUBLISHED = [
+  {
+    id: 'p1',
+    venture: 'hunter',
+    date: 'Fri, Jul 11 · 8:15 AM',
+    body: `"How does owner financing actually work?" I get this every week now.
+
+Simple version: I'm the bank. A little down, a monthly payment we both agree on, and you start building ownership from day one — no credit committee, no gatekeeper.
+
+At Hunter Land Ventures that's the whole point: make land ownable for the people the banks ignored.`,
+    url: 'https://www.linkedin.com/feed/update/urn:li:share:7488210847123730411',
+  },
+  {
+    id: 'p2',
+    venture: 'symphony',
+    date: 'Wed, Jul 9 · 7:30 AM',
+    body: `The table you build before you need it is the one that saves you.
+
+Symphony Six is Nashville men choosing depth over transactions — Revenue, Resources, Relationships. Bourbon and cigars are just the excuse to show up.
+
+Build the room before the storm. You'll be glad it's there.`,
+    url: 'https://www.linkedin.com/feed/update/urn:li:share:7487350847123730435',
+  },
+  {
+    id: 'p3',
+    venture: 'peptide',
+    date: 'Mon, Jul 7 · 8:00 AM',
+    body: `Every physician I talk to asks the same quiet question about peptides: who can I actually trust?
+
+After 20 years in medical sales, I'll tell you — sourcing is a trust problem before it's a science problem. The chemistry has to be right. But the relationship is what lets a doctor sleep at night.`,
+    url: 'https://www.linkedin.com/feed/update/urn:li:share:7486140847123730402',
+  },
+  {
+    id: 'p4',
+    venture: 'hunter',
+    date: 'Sat, Jul 5 · 9:00 AM',
+    body: `Inflation eats cash. It doesn't eat dirt.
+
+While everyone debates rates, raw land just sits there — no tenants, no repairs, quietly holding value. And with owner financing, you don't need a bank's blessing to own it.
+
+The best hedge is the one you can actually afford to start today.`,
+    url: 'https://www.linkedin.com/feed/update/urn:li:share:7485010847123730488',
+  },
+]

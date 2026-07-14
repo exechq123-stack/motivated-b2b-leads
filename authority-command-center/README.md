@@ -14,7 +14,10 @@ and the "drafts waiting" counter drops.
 ## Views
 1. **Approval Queue** (home) — draft cards with Approve / Edit / Skip.
 2. **Content Calendar** — week grid; approved posts land here, color-coded by venture.
-3. **Signals** — "what we're watching"; *Draft from this* pushes a new card into the Queue.
+3. **Published** — post history: everything the engine sent live, with links to the
+   real LinkedIn posts. Maps 1:1 onto `Content Queue` rows where `Status = Published`
+   (the live URL is already written back by the Make scenario — no analytics API needed).
+4. **Signals** — "what we're watching"; *Draft from this* pushes a new card into the Queue.
 
 > **No Analytics view.** This engine posts to Joe Hunter's **personal** LinkedIn
 > profile, and LinkedIn provides no analytics API for personal profiles — so a

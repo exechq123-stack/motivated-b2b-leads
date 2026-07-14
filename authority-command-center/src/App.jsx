@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react'
 import {
-  LayoutGrid, CalendarDays, Radar,
-  Check, X, Pencil, Save, ArrowRight, Clock,
+  LayoutGrid, CalendarDays, Radar, Send,
+  Check, X, Pencil, Save, ArrowRight, Clock, ExternalLink,
 } from 'lucide-react'
 import {
-  VENTURES, SEED_DRAFTS, SEED_CALENDAR, SEED_SIGNALS,
+  VENTURES, SEED_DRAFTS, SEED_CALENDAR, SEED_SIGNALS, SEED_PUBLISHED,
 } from './data.js'
 
 // Small helper — the recurring gold diamond motif.
@@ -220,17 +220,49 @@ function Signals({ signals, usedIds, onDraft }) {
 }
 
 // ============================================================
+// Published / Post History — the honest "proof" view
+// ============================================================
+function Published({ items }) {
+  return (
+    <div className="view">
+      <div className="view-head">
+        <h1>Published</h1>
+        <div className="sub">Every post the engine has sent live — your receipts, with links. New posts appear here automatically after they publish.</div>
+      </div>
+
+      <div className="published">
+        {items.map((p) => (
+          <div className="pub-card" key={p.id}>
+            <div className="pub-meta">
+              <Pill venture={p.venture} />
+              <span className="pub-live"><span className="live-dot" /> Live</span>
+              <span className="pub-date"><Clock size={13} /> {p.date}</span>
+            </div>
+            <div className="post-body">{p.body}</div>
+            <a className="li-link" href={p.url} target="_blank" rel="noreferrer">
+              View on LinkedIn <ExternalLink size={14} />
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
 // Shell — sidebar, topbar, splash, toasts, state
 // ============================================================
 const NAV = [
   { key: 'queue', label: 'Approval Queue', icon: LayoutGrid },
   { key: 'calendar', label: 'Content Calendar', icon: CalendarDays },
+  { key: 'published', label: 'Published', icon: Send },
   { key: 'signals', label: 'Signals', icon: Radar },
 ]
 
 const TITLES = {
   queue: 'Approval Queue',
   calendar: 'Content Calendar',
+  published: 'Published',
   signals: 'Signals',
 }
 
@@ -377,6 +409,7 @@ export default function App() {
             />
           )}
           {view === 'calendar' && <ContentCalendar items={calendar} />}
+          {view === 'published' && <Published items={SEED_PUBLISHED} />}
           {view === 'signals' && (
             <Signals signals={SEED_SIGNALS} usedIds={usedSignals} onDraft={draftFromSignal} />
           )}
