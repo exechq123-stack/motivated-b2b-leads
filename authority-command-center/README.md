@@ -15,7 +15,11 @@ and the "drafts waiting" counter drops.
 1. **Approval Queue** (home) — draft cards with Approve / Edit / Skip.
 2. **Content Calendar** — week grid; approved posts land here, color-coded by venture.
 3. **Signals** — "what we're watching"; *Draft from this* pushes a new card into the Queue.
-4. **Analytics** — stat cards + a 6-week impressions chart + top-performing post.
+
+> **No Analytics view.** This engine posts to Joe Hunter's **personal** LinkedIn
+> profile, and LinkedIn provides no analytics API for personal profiles — so a
+> live, automated dashboard can't be kept real. The view was cut on purpose
+> rather than show numbers that can't be trusted. The story ends at Publish.
 
 ## Run locally
 ```bash
@@ -34,8 +38,7 @@ npx vercel --prod
 
 ## Stack
 Vite + React (JavaScript), plain CSS with variables (`src/theme.css`),
-`recharts` for the analytics chart, `lucide-react` for icons,
-Fraunces + Hanken Grotesk via Google Fonts.
+`lucide-react` for icons, Fraunces + Hanken Grotesk via Google Fonts.
 
 ## Brand
 Emerald + gold XHQ house palette, gold diamond (◆) accent motif.

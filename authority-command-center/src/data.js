@@ -188,28 +188,7 @@ Got a question about it? Ask below. I read every one.`,
   },
 ]
 
-// ---- Analytics ----
-export const STATS = [
-  { label: 'Posts published (30d)', value: '12' },
-  { label: 'Impressions', value: '18,400' },
-  { label: 'Engagement rate', value: '6.2%' },
-  { label: 'Profile views', value: '340', delta: '↑ 41%' },
-  { label: 'Conversations started', value: '9' },
-]
-
-export const IMPRESSIONS_6WK = [
-  { week: 'Wk 1', impressions: 1900 },
-  { week: 'Wk 2', impressions: 2400 },
-  { week: 'Wk 3', impressions: 3100 },
-  { week: 'Wk 4', impressions: 3600 },
-  { week: 'Wk 5', impressions: 3700 },
-  { week: 'Wk 6', impressions: 4700 },
-]
-
-export const TOP_POST = {
-  venture: 'symphony',
-  body: SEED_DRAFTS[1].body, // the Symphony Six draft
-  impressions: '1,240',
-  reactions: '96',
-  comments: '18',
-}
+// NOTE: Analytics view intentionally removed. This demo posts to Joe Hunter's
+// personal LinkedIn profile, and LinkedIn exposes no analytics API for personal
+// profiles — so a live, automated dashboard isn't possible. Rather than show
+// numbers that can't be kept real, the view was cut. The story ends at Publish.

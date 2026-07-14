@@ -4,6 +4,18 @@ _How the Authority Command Center demo becomes a live posting engine on the infr
 
 ---
 
+## Scope decision (locked)
+
+**Target: Joe Hunter's personal LinkedIn profile.** `Channel` is fixed to
+`LinkedIn Profile` everywhere; the `XHQ Company Page` path is not used.
+
+Consequence: **no analytics automation.** LinkedIn exposes no analytics API for
+personal profiles (impressions, engagement, profile views can't be pulled
+programmatically). The demo's Analytics view has been **removed** rather than
+promise numbers that can't be kept real. What stays measurable without LinkedIn:
+publish count and cadence (from Airtable) and conversations/leads (from your CRM),
+if you ever want a lightweight scorecard later.
+
 ## TL;DR
 
 - The **Airtable → LinkedIn** half is already built and working in concept — the Make scenario **"XHQ Content Queue to LinkedIn"** does exactly this. It's currently **turned off and flagged invalid**, so it needs a small fix + reactivation.
@@ -70,7 +82,7 @@ When **Approve** is clicked in the app, write/update one record:
 | — (set by Approve) | `Status` (singleSelect) | **`Approved`** |
 | — (set by Approve) | `Publish Path` (singleSelect) | **`Auto (scheduler)`** |
 | — (set by Approve) | `Format` (singleSelect) | **`Text`** |
-| — (target account) | `Channel` (singleSelect) | `LinkedIn Profile` **or** `XHQ Company Page` |
+| — (target account) | `Channel` (singleSelect) | `LinkedIn Profile` (fixed — personal page) |
 | Lead-magnet line (optional) | `First Comment` (multilineText) | link, posted as comment #1 |
 | filled by Make | `Live Post URL` (url) | leave empty → Make fills it |
 
@@ -133,7 +145,7 @@ Your org (`My Organization`) is on **Free**: **2 active scenarios**, **1,000 ope
 1. **Reactivate "XHQ Content Queue to LinkedIn"** — it's `isActive: false` and `isinvalid: true`. Open it, re-confirm the LinkedIn module + connection (`My LinkedIn connection – Marland Richardson`, valid to 2027), re-save. Diagnose the invalid flag.
 2. **Tighten the trigger filter** to gate on `Publish Path = Auto` and `Format = Text` (see above).
 3. **Add the First Comment step** — the scenario publishes the post but doesn't yet post `First Comment` as comment #1 (where the lead-magnet link is meant to go).
-4. **Decide Profile vs Company Page** — personal posting works now; `XHQ Company Page` needs the org LinkedIn connection + Community Management scope.
+4. ~~Decide Profile vs Company Page~~ — **decided: personal profile.** No analytics automation follows from this (see Scope decision).
 5. **Choose the app→Airtable path** (webhook vs API) and add the Approve write.
 6. **Archive the second base** (`XHQ LinkedIn Content Engine / Daily Posts`) or migrate its unique fields, to avoid two competing sources of truth.
 7. **Pick the trigger/ops model** (webhook vs Core upgrade) given the Free-plan cap.

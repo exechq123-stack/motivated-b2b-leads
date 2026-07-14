@@ -1,15 +1,11 @@
 import { useState, useCallback } from 'react'
 import {
-  LayoutGrid, CalendarDays, Radar, BarChart3,
-  Check, X, Pencil, Save, ArrowRight, Clock, Sparkles,
+  LayoutGrid, CalendarDays, Radar,
+  Check, X, Pencil, Save, ArrowRight, Clock,
 } from 'lucide-react'
 import {
   VENTURES, SEED_DRAFTS, SEED_CALENDAR, SEED_SIGNALS,
-  STATS, IMPRESSIONS_6WK, TOP_POST,
 } from './data.js'
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart,
-} from 'recharts'
 
 // Small helper — the recurring gold diamond motif.
 const Diamond = ({ className = '' }) => <span className={`diamond ${className}`}>◆</span>
@@ -224,96 +220,18 @@ function Signals({ signals, usedIds, onDraft }) {
 }
 
 // ============================================================
-// Analytics
-// ============================================================
-function Analytics() {
-  return (
-    <div className="view">
-      <div className="view-head">
-        <h1>Analytics</h1>
-        <div className="sub">Authority you can see — not a vanity metric in sight.</div>
-      </div>
-
-      <div className="days-saved">
-        <Sparkles size={15} /> <span>Roughly <b>9 hours</b> saved this month.</span>
-      </div>
-
-      <div className="stat-row">
-        {STATS.map((s) => (
-          <div className="stat" key={s.label}>
-            <div className="label">{s.label}</div>
-            <div className="value">{s.value}</div>
-            {s.delta && <div className="delta">{s.delta}</div>}
-          </div>
-        ))}
-      </div>
-
-      <div className="panel">
-        <div className="panel-head">
-          <h3>Impressions, last 6 weeks</h3>
-          <span className="hint">Trending up</span>
-        </div>
-        <div style={{ width: '100%', height: 280 }}>
-          <ResponsiveContainer>
-            <AreaChart data={IMPRESSIONS_6WK} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
-              <defs>
-                <linearGradient id="impGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#0B5A3F" stopOpacity={0.28} />
-                  <stop offset="100%" stopColor="#0B5A3F" stopOpacity={0.02} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="rgba(11,90,63,0.08)" vertical={false} />
-              <XAxis dataKey="week" tickLine={false} axisLine={false} tick={{ fill: '#7C8A82', fontSize: 12 }} />
-              <YAxis tickLine={false} axisLine={false} tick={{ fill: '#7C8A82', fontSize: 12 }} width={44} />
-              <Tooltip
-                contentStyle={{
-                  background: '#042B1E', border: 'none', borderRadius: 8,
-                  color: '#E6CE92', fontSize: 13, fontWeight: 600,
-                }}
-                labelStyle={{ color: '#E6CE92' }}
-                formatter={(v) => [v.toLocaleString(), 'Impressions']}
-                cursor={{ stroke: '#C8A24B', strokeWidth: 1, strokeDasharray: '4 4' }}
-              />
-              <Area type="monotone" dataKey="impressions" stroke="#0B5A3F" strokeWidth={2.5}
-                fill="url(#impGrad)" dot={{ r: 3, fill: '#C8A24B', stroke: '#0B5A3F' }} activeDot={{ r: 5 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="panel">
-        <div className="panel-head">
-          <h3>Top performing post</h3>
-          <Pill venture={TOP_POST.venture} />
-        </div>
-        <div className="top-post">
-          <div className="post-body">{TOP_POST.body}</div>
-          <div className="metrics">
-            <div className="metric"><div className="n">{TOP_POST.impressions}</div><div className="k">Impressions</div></div>
-            <div className="metric"><div className="n">{TOP_POST.reactions}</div><div className="k">Reactions</div></div>
-            <div className="metric"><div className="n">{TOP_POST.comments}</div><div className="k">Comments</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ============================================================
 // Shell — sidebar, topbar, splash, toasts, state
 // ============================================================
 const NAV = [
   { key: 'queue', label: 'Approval Queue', icon: LayoutGrid },
   { key: 'calendar', label: 'Content Calendar', icon: CalendarDays },
   { key: 'signals', label: 'Signals', icon: Radar },
-  { key: 'analytics', label: 'Analytics', icon: BarChart3 },
 ]
 
 const TITLES = {
   queue: 'Approval Queue',
   calendar: 'Content Calendar',
   signals: 'Signals',
-  analytics: 'Analytics',
 }
 
 export default function App() {
@@ -462,7 +380,6 @@ export default function App() {
           {view === 'signals' && (
             <Signals signals={SEED_SIGNALS} usedIds={usedSignals} onDraft={draftFromSignal} />
           )}
-          {view === 'analytics' && <Analytics />}
         </div>
       </div>
 
