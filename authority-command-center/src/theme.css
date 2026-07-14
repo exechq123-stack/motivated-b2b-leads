@@ -368,6 +368,7 @@ button { font-family: var(--font-body); cursor: pointer; }
    Content Calendar
    ============================================================ */
 .cal-caption { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+.cal-hint { color: var(--gold-deep); font-weight: 600; }
 
 .week {
   display: grid;
@@ -396,11 +397,41 @@ button { font-family: var(--font-body); cursor: pointer; }
   text-align: left;
   border-top: none; border-right: none; border-bottom: none;
   width: 100%;
-  cursor: pointer;
-  transition: background 0.14s ease, transform 0.1s ease;
+  cursor: grab;
+  touch-action: none;          /* let us own the drag gesture on touch */
+  user-select: none;
+  transition: background 0.14s ease, transform 0.1s ease, opacity 0.14s ease;
 }
 .cal-block:hover { background: rgba(11, 90, 63, 0.1); }
-.cal-block:active { transform: scale(0.98); }
+.cal-block:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.cal-block.is-dragging { opacity: 0.35; }
+body.cal-dragging, body.cal-dragging .cal-block { cursor: grabbing; }
+
+/* day highlighted as a drop target */
+.day.drag-over {
+  outline: 2px dashed var(--gold);
+  outline-offset: -2px;
+  background: rgba(200, 162, 75, 0.07);
+}
+.day.drag-over .cal-empty-day { color: var(--gold-deep); font-weight: 600; }
+
+/* floating clone that follows the cursor/finger while dragging */
+.drag-ghost {
+  position: fixed;
+  transform: translate(-14px, -12px) rotate(-1.5deg);
+  pointer-events: none;
+  z-index: 70;
+  width: 150px;
+  background: var(--card);
+  border-radius: 6px;
+  border-left: 3px solid var(--emerald);
+  box-shadow: var(--shadow-pop);
+  padding: 7px 9px;
+  opacity: 0.96;
+}
+.drag-ghost.v-hunter { border-left-color: var(--emerald); }
+.drag-ghost.v-peptide { border-left-color: var(--teal); }
+.drag-ghost.v-symphony { border-left-color: var(--gold-deep); }
 .cal-block.v-hunter { border-left-color: var(--emerald); background: rgba(11, 90, 63, 0.06); }
 .cal-block.v-peptide { border-left-color: var(--teal); background: rgba(44, 122, 107, 0.08); }
 .cal-block.v-symphony { border-left-color: var(--gold-deep); background: rgba(169, 132, 47, 0.08); }
@@ -441,6 +472,19 @@ button { font-family: var(--font-body); cursor: pointer; }
 }
 .preview .close:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
 .preview-meta { color: var(--muted); font-size: 12.5px; display: flex; align-items: center; gap: 7px; }
+.preview-actions {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+}
+.btn--danger {
+  background: transparent;
+  color: #A8352B;
+  border-color: rgba(168, 53, 43, 0.28);
+}
+.btn--danger:hover { background: rgba(168, 53, 43, 0.08); border-color: rgba(168, 53, 43, 0.5); }
 
 /* ============================================================
    Signals

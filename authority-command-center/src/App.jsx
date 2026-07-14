@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import {
   LayoutGrid, CalendarDays, Radar, Send,
-  Check, X, Pencil, Save, ArrowRight, Clock, ExternalLink,
+  Check, X, Pencil, Save, ArrowRight, Clock, ExternalLink, Trash2,
 } from 'lucide-react'
 import {
   VENTURES, SEED_DRAFTS, SEED_CALENDAR, SEED_SIGNALS, SEED_PUBLISHED,
@@ -126,14 +126,66 @@ function timeKey(t) {
   return h * 60 + parseInt(m[2], 10)
 }
 
-function ContentCalendar({ items }) {
+const blockExcerpt = (b) =>
+  b.excerpt || b.body.split(/\s+/).slice(0, 6).join(' ') + '…'
+
+function ContentCalendar({ items, onMove, onDelete }) {
   const [preview, setPreview] = useState(null)
+  const [drag, setDrag] = useState(null)     // live ghost: { block, x, y, overDay }
+  const gesture = useRef(null)               // mutable per-gesture scratch
+
+  // Which day column sits under a screen point (the ghost is pointer-events:none).
+  const dayUnderPoint = (x, y) => {
+    const el = document.elementFromPoint(x, y)
+    const col = el && el.closest('.day')
+    return col ? col.getAttribute('data-day') : null
+  }
+
+  const onPointerMove = (e) => {
+    const g = gesture.current
+    if (!g) return
+    const moved = Math.hypot(e.clientX - g.startX, e.clientY - g.startY)
+    if (!g.dragging && moved > 6) {
+      g.dragging = true
+      document.body.classList.add('cal-dragging')
+    }
+    if (g.dragging) {
+      const overDay = dayUnderPoint(e.clientX, e.clientY)
+      setDrag({ block: g.block, x: e.clientX, y: e.clientY, overDay })
+    }
+  }
+
+  const onPointerUp = (e) => {
+    const g = gesture.current
+    window.removeEventListener('pointermove', onPointerMove)
+    window.removeEventListener('pointerup', onPointerUp)
+    document.body.classList.remove('cal-dragging')
+    gesture.current = null
+    setDrag(null)
+    if (!g) return
+    if (g.dragging) {
+      const overDay = dayUnderPoint(e.clientX, e.clientY)
+      if (overDay && overDay !== g.block.day) onMove(g.block.id, overDay)
+    } else {
+      setPreview(g.block)   // no real drag → treat as a click/preview
+    }
+  }
+
+  const onBlockPointerDown = (e, block) => {
+    if (e.button && e.button !== 0) return
+    gesture.current = { block, startX: e.clientX, startY: e.clientY, dragging: false }
+    window.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', onPointerUp)
+  }
 
   return (
     <div className="view">
       <div className="view-head">
         <h1>Content Calendar</h1>
-        <div className="cal-caption">Publishing runs automatically. You don't post — the engine does.</div>
+        <div className="cal-caption">
+          Publishing runs automatically. You don't post — the engine does.
+          <span className="cal-hint"> Drag a post to reschedule it, or open one to delete it.</span>
+        </div>
       </div>
 
       <div className="week">
@@ -142,32 +194,51 @@ function ContentCalendar({ items }) {
             .filter((i) => i.day === day)
             .sort((a, b) => timeKey(a.time) - timeKey(b.time))
           const isEmpty = blocks.length === 0
+          const over = drag && drag.overDay === day
           return (
-            <div className={`day ${isEmpty ? 'empty-day' : ''}`} key={day}>
+            <div
+              className={`day ${isEmpty ? 'empty-day' : ''} ${over ? 'drag-over' : ''}`}
+              key={day}
+              data-day={day}
+            >
               <div className="day-head">
                 <span className="day-name">{day}</span>
                 <span className="day-num">{DAY_NUMS[day]}</span>
               </div>
               {isEmpty ? (
-                <span className="cal-empty-day">—</span>
+                <span className="cal-empty-day">{over ? 'Drop here' : '—'}</span>
               ) : (
                 blocks.map((b) => (
-                  <button
+                  <div
                     key={b.id}
-                    className={`cal-block ${VENTURES[b.venture].block}`}
-                    onClick={() => setPreview(b)}
+                    role="button"
+                    tabIndex={0}
+                    className={`cal-block ${VENTURES[b.venture].block} ${drag && drag.block.id === b.id ? 'is-dragging' : ''}`}
+                    onPointerDown={(e) => onBlockPointerDown(e, b)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPreview(b) }
+                    }}
                   >
                     <div className="cal-time">{b.time}</div>
-                    <div className="cal-excerpt">
-                      {b.excerpt || b.body.split(/\s+/).slice(0, 6).join(' ') + '…'}
-                    </div>
-                  </button>
+                    <div className="cal-excerpt">{blockExcerpt(b)}</div>
+                  </div>
                 ))
               )}
             </div>
           )
         })}
       </div>
+
+      {/* floating drag ghost */}
+      {drag && (
+        <div
+          className={`drag-ghost ${VENTURES[drag.block.venture].block}`}
+          style={{ left: drag.x, top: drag.y }}
+        >
+          <div className="cal-time">{drag.block.time}</div>
+          <div className="cal-excerpt">{blockExcerpt(drag.block)}</div>
+        </div>
+      )}
 
       {preview && (
         <div className="overlay" onClick={() => setPreview(null)}>
@@ -179,6 +250,14 @@ function ContentCalendar({ items }) {
             <div className="post-body">{preview.body}</div>
             <div className="preview-meta">
               <Clock size={13} /> {preview.day}, {preview.time} · {preview.status || 'Scheduled'}
+            </div>
+            <div className="preview-actions">
+              <button
+                className="btn btn--danger"
+                onClick={() => { onDelete(preview.id); setPreview(null) }}
+              >
+                <Trash2 size={15} /> Delete post
+              </button>
             </div>
           </div>
         </div>
@@ -310,6 +389,17 @@ export default function App() {
     setDrafts((d) => d.map((x) => (x.id === id ? { ...x, body } : x)))
   }, [])
 
+  // Calendar: drag a post to another day, or delete it outright.
+  const moveCalendarItem = useCallback((id, day) => {
+    setCalendar((c) => c.map((x) => (x.id === id ? { ...x, day } : x)))
+    pushToast(`Moved to ${day}`)
+  }, [pushToast])
+
+  const deleteCalendarItem = useCallback((id) => {
+    setCalendar((c) => c.filter((x) => x.id !== id))
+    pushToast('Removed from calendar')
+  }, [pushToast])
+
   // Signals "Draft from this" → new card into queue, switch to queue, highlight.
   const draftFromSignal = useCallback((signal) => {
     const nid = `sig-${signal.id}-${seq}`
@@ -408,7 +498,9 @@ export default function App() {
               onEdit={editDraft}
             />
           )}
-          {view === 'calendar' && <ContentCalendar items={calendar} />}
+          {view === 'calendar' && (
+            <ContentCalendar items={calendar} onMove={moveCalendarItem} onDelete={deleteCalendarItem} />
+          )}
           {view === 'published' && <Published items={SEED_PUBLISHED} />}
           {view === 'signals' && (
             <Signals signals={SEED_SIGNALS} usedIds={usedSignals} onDraft={draftFromSignal} />

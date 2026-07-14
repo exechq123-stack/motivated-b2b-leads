@@ -14,6 +14,8 @@ and the "drafts waiting" counter drops.
 ## Views
 1. **Approval Queue** (home) — draft cards with Approve / Edit / Skip.
 2. **Content Calendar** — week grid; approved posts land here, color-coded by venture.
+   **Drag** a post to another day to reschedule it, or open a post and **Delete** it.
+   (Drag uses pointer events, so it works on desktop and touch.)
 3. **Published** — post history: everything the engine sent live, with links to the
    real LinkedIn posts. Maps 1:1 onto `Content Queue` rows where `Status = Published`
    (the live URL is already written back by the Make scenario — no analytics API needed).
